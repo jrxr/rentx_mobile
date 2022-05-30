@@ -10,6 +10,7 @@ import { Car } from "../../components/Car";
 import { useNavigation } from "@react-navigation/native";
 import { CarDTO } from "../../dtos/CarDTO";
 import { Load } from "../../components/Load";
+import { useTheme } from "styled-components";
 
 export function Home() {
   const theme = useTheme();
