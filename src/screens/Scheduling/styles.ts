@@ -15,9 +15,8 @@ export const Header = styled.View`
   width: 100%;
   height: 325px;
   background-color: ${({ theme }) => theme.colors.header};
-  justify-content: center;
   padding: 0 25px;
-  padding-top: ${getStatusBarHeight() + 30}px;
+  padding-top: ${getStatusBarHeight() + 20}px;
 `;
 
 export const Title = styled.Text`
@@ -52,7 +51,7 @@ export const DateValue = styled.Text<DateValueProps>`
   color: ${({ theme }) => theme.colors.shape};
   ${({ selected, theme }) => !selected && css`
     border-bottom-width: 1px;
-    border-bottom-color: ${theme.colors.shape};
+    border-bottom-color: ${theme.colors.text};
     padding-bottom: 5px;
   `};
 `;
