@@ -72,7 +72,12 @@ export function SchedulingDetails() {
 
     await api.post('/schedules_byuser', {
       user_id: car.user_id,
-      car
+      car,
+      startDate: format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy"),
+      endDate: format(
+        getPlatformDate(new Date(dates[dates.length - 1])),
+        "dd/MM/yyyy"
+      )
     })
 
     api
@@ -92,7 +97,7 @@ export function SchedulingDetails() {
     setRentalPeriod({
       start: format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy"),
       end: format(
-        getPlatformDate(new Date(dates[dates.lenght - 1])),
+        getPlatformDate(new Date(dates[dates.length - 1])),
         "dd/MM/yyyy"
       ),
     });

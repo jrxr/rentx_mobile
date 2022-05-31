@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { FlatList, StatusBar } from "react-native";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { useTheme } from "styled-components";
-import { AntDesign } from "@expo/vector-icons";
-import { format, parseISO } from "date-fns";
+import React, { useState, useEffect } from 'react';
+import { FlatList, StatusBar } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useTheme } from 'styled-components';
+import { AntDesign } from '@expo/vector-icons';
+import { format, parseISO } from 'date-fns';
 
-import { api } from "../../services/api";
+import { api } from '../../services/api';
 
-import { BackButton } from "../../components/BackButton";
-import { Car } from "../../components/Car";
+import { BackButton } from '../../components/BackButton';
+import { Car } from '../../components/Car';
+import { LoadAnimation } from '../../components/LoadAnimation';
 
 import {
-  Container,
-  Header,
+  Container, 
+  Header, 
   Title,
   SubTitle,
   Content,
@@ -23,11 +24,12 @@ import {
   CarFooter,
   CarFooterTitle,
   CarFooterPeriod,
-  CarFooterDate,
-} from "./styles";
+  CarFooterDate
+} from './styles';
 
 interface DataProps {
   id: string;
+  car: string;
   start_date: string;
   end_date: string;
 }
@@ -47,14 +49,14 @@ export function MyCars() {
   useEffect(() => {
     async function fetchCars() {
       try {
-        const response = await api.get("/schedules_byuser?user_id=1");
+        const response = await api.get('/rentals');
         const dataFormatted = response.data.map((data: DataProps) => {
           return {
             id: data.id,
-            car: data,
-            start_date: format(parseISO(data.start_date), "dd/MM/yyyy"),
-            end_date: format(parseISO(data.end_date), "dd/MM/yyyy"),
-          };
+            car: data.car,
+            start_date: format(parseISO(data.start_date), 'dd/MM/yyyy'),
+            end_date: format(parseISO(data.end_date), 'dd/MM/yyyy')
+          }
         });
 
         setCars(dataFormatted);
@@ -66,35 +68,39 @@ export function MyCars() {
     }
 
     fetchCars();
-  }, [screenIsFocus]);
+  },[screenIsFocus]);
 
   return (
     <Container>
       <Header>
-        <StatusBar
+        <StatusBar 
           barStyle="light-content"
           backgroundColor="transparent"
           translucent
         />
-        <BackButton onPress={handleBack} color={theme.colors.shape} />
-        <Title>Seus agendamentos, estão aqui.</Title>
-        <SubTitle>Conforto, segurança e praticidade.</SubTitle>
+        <BackButton
+          onPress={handleBack}
+          color={theme.colors.shape}
+        />
+        <Title>
+          Seus agendamentos, estão aqui.
+        </Title>
+        <SubTitle>
+          Conforto, segurança e praticidade.
+        </SubTitle>
       </Header>
 
-      {loading ? (
-        <></>
-      ) : (
+      { 
+        loading ? <LoadAnimation /> :
         <Content>
           <Appointments>
             <AppointmentsTitle>Agendamento feitos</AppointmentsTitle>
-            <AppointmentsQuantity>
-              {cars.length >= 10 ? cars.length : `0${cars.length}`}
-            </AppointmentsQuantity>
+            <AppointmentsQuantity>{cars.length >= 10 ? cars.length : `0${cars.length}` }</AppointmentsQuantity>
           </Appointments>
 
-          <FlatList
+          <FlatList 
             data={cars}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <CarWrapper>
@@ -103,7 +109,7 @@ export function MyCars() {
                   <CarFooterTitle>Período</CarFooterTitle>
                   <CarFooterPeriod>
                     <CarFooterDate>{item.start_date}</CarFooterDate>
-                    <AntDesign
+                    <AntDesign 
                       name="arrowright"
                       size={20}
                       color={theme.colors.title}
@@ -116,7 +122,7 @@ export function MyCars() {
             )}
           />
         </Content>
-      )}
+      }
     </Container>
   );
 }
