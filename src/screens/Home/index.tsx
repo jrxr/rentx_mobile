@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { useNetInfo } from "@react-native-community/netinfo";
 
+import { database } from "../../database";
 import { api } from "../../services/api";
+import { Car as ModelCar } from "../../database/model/Car";
 
 import { Car } from "../../components/Car";
 import { LoadAnimation } from "../../components/LoadAnimation";
@@ -23,23 +26,23 @@ export function Home() {
     navigation.navigate("CarDetails", { car });
   }
 
-  async function offlineSynchronize() {
-    await synchronize({
-      database,
-      pullChanges: async ({ lastPulledAt }) => {
-        const response = await api.get(
-          `cars/sync/pull?lastPulledVersion=${lastPulledAt || 0}`
-        );
+  // async function offlineSynchronize() {
+  //   await synchronize({
+  //     database,
+  //     pullChanges: async ({ lastPulledAt }) => {
+  //       const response = await api.get(
+  //         `cars/sync/pull?lastPulledVersion=${lastPulledAt || 0}`
+  //       );
 
-        const { changes, latestVersion } = response.data;
-        return { changes, timestamp: latestVersion };
-      },
-      pushChanges: async ({ changes }) => {
-        const user = changes.users;
-        await api.post("/users/sync", user);
-      },
-    });
-  }
+  //       const { changes, latestVersion } = response.data;
+  //       return { changes, timestamp: latestVersion };
+  //     },
+  //     pushChanges: async ({ changes }) => {
+  //       const user = changes.users;
+  //       await api.post("/users/sync", user);
+  //     },
+  //   });
+  // }
 
   useEffect(() => {
     let isMounted = true;
@@ -67,11 +70,11 @@ export function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    if (netInfo.isConnected === true) {
-      offlineSynchronize();
-    }
-  }, [netInfo.isConnected]);
+  // useEffect(() => {
+  //   if (netInfo.isConnected === true) {
+  //     offlineSynchronize();
+  //   }
+  // }, [netInfo.isConnected]);
 
   return (
     <Container>
